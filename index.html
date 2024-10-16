@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TON Wallet Connect</title>
+  
+  <!-- Importing TonConnect SDK -->
+  <script src="https://unpkg.com/tonconnect-sdk@0.1.1/tonconnect.min.js"></script>
+  
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f9;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    h1 {
+      color: #0051ff;
+    }
+    #wallet-info {
+      margin-top: 20px;
+      padding: 10px;
+      border: 1px solid #0051ff;
+      background-color: #e0f0ff;
+      border-radius: 5px;
+      display: none;
+    }
+    .connect-btn {
+      padding: 10px 20px;
+      background-color: #0051ff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    .connect-btn:hover {
+      background-color: #003bb3;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Connect Your TON Wallet</h1>
+  
+  <button class="connect-btn" id="connectBtn">Connect Wallet</button>
+  
+  <div id="wallet-info">
+    <p><strong>Wallet Address:</strong> <span id="walletAddress"></span></p>
+  </div>
+
+  <script>
+    const connectBtn = document.getElementById('connectBtn');
+    const walletInfoDiv = document.getElementById('wallet-info');
+    const walletAddressSpan = document.getElementById('walletAddress');
+    
+    connectBtn.addEventListener('click', async () => {
+      console.log("Button clicked!");  // Debug: Check if the click event is being triggered
+
+      try {
+        // Initialize TonConnect instance
+        const tonConnect = new TonConnect({
+          manifestUrl: 'https://tonkeeper.com/manifest.json' // Tonkeeper integration manifest
+        });
+
+        console.log("TonConnect instance created.");  // Debug: Check if the TonConnect is initialized
+        
+        // Ask the user to connect their wallet
+        await tonConnect.connect();
+
+        console.log("Wallet connected.");  // Debug: Check if the wallet connection happens
+        
+        // Fetch the wallet details
+        const connectedWallet = tonConnect.wallet();
+        const walletAddress = connectedWallet.address;
+
+        // Display the wallet address
+        walletAddressSpan.textContent = walletAddress;
+        walletInfoDiv.style.display = 'block';
+        console.log("Wallet Address:", walletAddress);  // Debug: Log the wallet address
+
+      } catch (error) {
+        console.error('Error connecting wallet:', error);
+        alert('Error connecting to wallet. Please check your wallet and try again.');
+      }
+    });
+  </script>
+
+</body>
+</html>
